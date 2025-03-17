@@ -33,12 +33,12 @@ public class KakaoPayCrawlingService implements CrawlingService {
 
         log.info("카카오페이 기술블로그 크롤링 시작");
 
-        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
+//        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
 
         List<CrawledTechArticleDto> techArticles = new ArrayList<>();
 
-        for (int i = 1; i <= 17; i++) {
+        for (int i = 1; i <= 2; i++) {
             // 페이지 이동
             String page = "/page/" + i;
             String pagedTechBlogUrl = techBlogUrl + page;
@@ -55,6 +55,9 @@ public class KakaoPayCrawlingService implements CrawlingService {
             // WebElement 마다 게시글 정보 가져오기
             for (WebElement post : postElements) {
                 CrawledTechArticleDto techArticle = crawlPost(post);
+                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 11))) {
+                    break;
+                }
                 techArticles.add(techArticle);
             }
         }

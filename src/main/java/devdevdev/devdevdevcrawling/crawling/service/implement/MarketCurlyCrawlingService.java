@@ -32,7 +32,7 @@ public class MarketCurlyCrawlingService implements CrawlingService {
         techBlogUrl = "https://helloworld.kurly.com/";
         log.info("마켓컬리 기술블로그 크롤링 시작");
 
-        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
+//        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
 
         webDriver.get(techBlogUrl);
@@ -47,6 +47,9 @@ public class MarketCurlyCrawlingService implements CrawlingService {
 
         for (WebElement post : postElements) {
             CrawledTechArticleDto techArticle = crawlPost(post);
+            if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 11))) {
+                break;
+            }
             techArticles.add(techArticle);
         }
 

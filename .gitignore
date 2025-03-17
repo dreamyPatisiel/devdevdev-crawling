@@ -36,6 +36,8 @@ out/
 ### VS Code ###
 .vscode/
 
-src/main/resources/application-opensearch.yml
-src/main/resources/application-db.yml
+src/main/resources/application-db-dev.yml
+src/main/resources/application-db-prod.yml
+src/main/resources/application-opensearch-dev.yml
+src/main/resources/application-opensearch-prod.yml
 src/test/resources/application-test.yml

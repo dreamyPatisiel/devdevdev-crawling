@@ -23,26 +23,25 @@ import org.springframework.util.StringUtils;
 @RequiredArgsConstructor
 public class AWSCrawlingService implements CrawlingService {
 
-    private final static String techBlogUrl = "https://aws.amazon.com/ko/blogs/tech";
-
-    private WebDriver webDriver;
-    // todo: static 변수인 이유?
     private Long companyId;
     private String companyName;
+    private WebDriver webDriver;
+    private final static String techBlogUrl = "https://aws.amazon.com/ko/blogs/tech";
 
     @Override
     public List<CrawledTechArticleDto> crawlAllTechBlogs(Company company) {
-        companyId = company.getId();
-        companyName = company.getName();
-
-        List<CrawledTechArticleDto> techArticles = new ArrayList<>();
 
         log.info("AWS 기술블로그 크롤링 시작");
 
         webDriver = new ChromeDriver();
 
-        // todo: 매직넘버가 너무 많아요. 처음 코드를 본 사람은 이게 무엇을 의미하는지 알기 어려울 것 같아요.
-        for (int i = 1; i <= 29; i++) {
+        companyId = company.getId();
+        companyName = company.getName();
+
+        List<CrawledTechArticleDto> techArticles = new ArrayList<>();
+
+//        for (int i = 1; i <= 44; i++) {
+        for (int i = 1; i <= 5; i++) {
             // 페이지 이동
             String pagedTechBlogUrl = techBlogUrl;
             if (i >= 2) {
@@ -62,6 +61,9 @@ public class AWSCrawlingService implements CrawlingService {
             // WebElement 마다 게시글 정보 가져오기
             for (WebElement post : postElements) {
                 CrawledTechArticleDto techArticle = crawlPost(post);
+//                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 10))) {
+//                    break;
+//                }
                 techArticles.add(techArticle);
             }
         }
@@ -82,7 +84,6 @@ public class AWSCrawlingService implements CrawlingService {
 
     /**
      * @param company
-     * @return
      * @Note: 가장 최신의 AWS 기술블로그를 크롤링 한다.
      */
     @Override

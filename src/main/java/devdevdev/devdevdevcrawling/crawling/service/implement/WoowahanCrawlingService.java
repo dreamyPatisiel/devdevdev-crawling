@@ -25,21 +25,21 @@ public class WoowahanCrawlingService implements CrawlingService {
     private WebDriver webDriver;
     private static Long companyId;
     private static String companyName;
-    private static String techBlogUrl;
+    private final static String techBlogUrl = "https://techblog.woowahan.com";
 
     public List<CrawledTechArticleDto> crawlAllTechBlogs(Company company) {
-        companyId = company.getId();
-        companyName = company.getName();
-        techBlogUrl = "https://techblog.woowahan.com";
 
         log.info("우아한형제들 기술블로그 크롤링 시작");
 
-//        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
+
+        companyId = company.getId();
+        companyName = company.getName();
 
         List<CrawledTechArticleDto> techArticles = new ArrayList<>();
 
-        for (int i = 1; i <= 1; i++) {
+        // 1~46
+        for (int i = 46; i <= 46; i++) {
             // 페이지 이동
             String page = "?paged=" + i;
             String pagedTechBlogUrl = techBlogUrl + page;
@@ -49,25 +49,28 @@ public class WoowahanCrawlingService implements CrawlingService {
             webDriver.get(pagedTechBlogUrl);
             webDriver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
-            List<WebElement> postElements = webDriver.findElements(By.className("post-item"));
+//            List<WebElement> postElements = webDriver.findElements(By.className("post-item"));
+            List<WebElement> postElements = webDriver.findElements(By.cssSelector("div.post-list .post-item"));
 
             log.info("...page " + i + " 가져오기 완료");
 
             // WebElement 마다 게시글 정보 가져오기
             for (WebElement post : postElements) {
+                try {
+                    // "firstpaint" 클래스가 아닌 요소만 필터링
+                    if (post.getAttribute("class").contains("firstpaint")) {
+                        continue;
+                    }
 
-                // "firstpaint" 클래스가 아닌 요소만 필터링
-                if (post.getAttribute("class").contains("firstpaint")) {
+                    CrawledTechArticleDto techArticle = crawlPost(post);
+    //                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 11))) {
+    //                    break;
+    //                }
+                    techArticles.add(techArticle);
+                } catch (Exception e) {
                     continue;
                 }
-
-                CrawledTechArticleDto techArticle = crawlPost(post);
-                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 11))) {
-                    break;
-                }
-                techArticles.add(techArticle);
             }
-
         }
 
         // 각 게시글마다 url 접근하여 contents 가져오기

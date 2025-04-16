@@ -24,21 +24,20 @@ public class SocarCrawlingService implements CrawlingService {
     private WebDriver webDriver;
     private static Long companyId;
     private static String companyName;
-    private static String techBlogUrl;
+    private final static String techBlogUrl = "https://tech.socarcorp.kr/posts/";
 
     public List<CrawledTechArticleDto> crawlAllTechBlogs(Company company) {
-        companyId = company.getId();
-        companyName = company.getName();
-        techBlogUrl = "https://tech.socarcorp.kr/posts/";
-
         log.info("쏘카 기술블로그 크롤링 시작");
 
-//        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
+
+        companyId = company.getId();
+        companyName = company.getName();
 
         List<CrawledTechArticleDto> techArticles = new ArrayList<>();
 
-        for (int i = 1; i <= 10; i++) {
+        // 1~13
+        for (int i = 1; i <= 3; i++) {
             // 페이지 이동
             String pagedTechBlogUrl = techBlogUrl;
             if (i >= 2) {
@@ -58,9 +57,9 @@ public class SocarCrawlingService implements CrawlingService {
             // WebElement 마다 게시글 정보 가져오기
             for (WebElement post : postElements) {
                 CrawledTechArticleDto techArticle = crawlPost(post);
-                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 10, 30))) {
-                    break;
-                }
+//                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 10, 30))) {
+//                    break;
+//                }
                 techArticles.add(techArticle);
             }
         }

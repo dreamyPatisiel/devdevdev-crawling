@@ -24,17 +24,20 @@ public class MarketCurlyCrawlingService implements CrawlingService {
     private WebDriver webDriver;
     private static Long companyId;
     private static String companyName;
-    private static String techBlogUrl;
+    private final static String techBlogUrl = "https://helloworld.kurly.com/";
 
     public List<CrawledTechArticleDto> crawlAllTechBlogs(Company company) {
-        companyId = company.getId();
-        companyName = company.getName();
-        techBlogUrl = "https://helloworld.kurly.com/";
+
         log.info("마켓컬리 기술블로그 크롤링 시작");
 
-//        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
 
+        companyId = company.getId();
+        companyName = company.getName();
+
+        List<CrawledTechArticleDto> techArticles = new ArrayList<>();
+
+        // 무한스크롤링
         webDriver.get(techBlogUrl);
         webDriver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 
@@ -43,13 +46,11 @@ public class MarketCurlyCrawlingService implements CrawlingService {
         log.info("...post list 가져오기 완료");
 
         // WebElement 마다 게시글 정보 가져오기
-        List<CrawledTechArticleDto> techArticles = new ArrayList<>();
-
         for (WebElement post : postElements) {
             CrawledTechArticleDto techArticle = crawlPost(post);
-            if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 11))) {
-                break;
-            }
+//            if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 11))) {
+//                break;
+//            }
             techArticles.add(techArticle);
         }
 

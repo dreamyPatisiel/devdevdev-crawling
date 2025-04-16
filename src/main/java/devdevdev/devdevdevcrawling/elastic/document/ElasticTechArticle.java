@@ -12,7 +12,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 @Getter
 @Setter
-@Document(indexName = "articles")
+@Document(indexName = "articles" + "#{@elasticsearchIndexConfigService.getIndexName()}")
 public class ElasticTechArticle {
     @Id
     private String id;

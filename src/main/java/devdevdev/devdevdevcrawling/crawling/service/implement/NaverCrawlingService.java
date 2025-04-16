@@ -24,21 +24,20 @@ public class NaverCrawlingService implements CrawlingService {
     private WebDriver webDriver;
     private static Long companyId;
     private static String companyName;
-    private static String techBlogUrl;
+    private final static String techBlogUrl = "https://d2.naver.com/home";
 
     public List<CrawledTechArticleDto> crawlAllTechBlogs(Company company) {
-        companyId = company.getId();
-        companyName = company.getName();
-        techBlogUrl = "https://d2.naver.com/home";
-
         log.info("네이버 기술블로그 크롤링 시작");
 
-//        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
+
+        companyId = company.getId();
+        companyName = company.getName();
 
         List<CrawledTechArticleDto> techArticles = new ArrayList<>();
 
-        for (int i = 0; i <= 10; i++) {
+        // 0~33
+        for (int i = 0; i <= 0; i++) {
             // 페이지 이동
             String page = "?page=" + i;
             String pagedTechBlogUrl = techBlogUrl + page;
@@ -55,10 +54,10 @@ public class NaverCrawlingService implements CrawlingService {
             // WebElement 마다 게시글 정보 가져오기
             for (WebElement post : postElements) {
                 CrawledTechArticleDto techArticle = crawlPost(post);
-                techArticle.getRegDate();
-                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 10))) {
-                    break;
-                }
+//                techArticle.getRegDate();
+//                if(techArticle.getRegDate().isBefore(LocalDate.of(2024, 12, 10))) {
+//                    break;
+//                }
                 techArticles.add(techArticle);
             }
         }

@@ -24,21 +24,21 @@ public class LineCrawlingService implements CrawlingService {
     private WebDriver webDriver;
     private static Long companyId;
     private static String companyName;
-    private static String techBlogUrl;
+    private final static String techBlogUrl = "https://engineering.linecorp.com/ko/blog";
 
     public List<CrawledTechArticleDto> crawlAllTechBlogs(Company company) {
-        companyId = company.getId();
-        companyName = company.getName();
-        techBlogUrl = "https://engineering.linecorp.com/ko/blog";
-
         log.info("라인 기술블로그 크롤링 시작");
 
-        System.setProperty("webdriver.chrome.driver", "/Users/soyoung/DevSpace/chromedriver-mac-x64/chromedriver");
         webDriver = new ChromeDriver();
+
+        companyId = company.getId();
+        companyName = company.getName();
 
         List<CrawledTechArticleDto> techArticles = new ArrayList<>();
 
-        for (int i = 1; i <= 38; i++) {
+        // 1~38
+        // 1~6, 7~12, 13~18, 19~24, 25~30, 31~36, 37~38
+        for (int i = 37; i <= 38; i++) {
             // 페이지 이동
             String pagedTechBlogUrl = techBlogUrl;
             if (i >= 2) {
@@ -47,7 +47,6 @@ public class LineCrawlingService implements CrawlingService {
             }
 
             log.info("...page " + i + " 가져오기");
-
             webDriver.get(pagedTechBlogUrl);
             webDriver.manage().timeouts().implicitlyWait(Duration.ofMillis(500));
 

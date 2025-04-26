@@ -24,11 +24,11 @@ public class NotificationService {
     @Value("${service-name}")
     private String serviceName;
 
+    private final RestTemplate restTemplate;
+
     private final ApiKeyRepository apiKeyRepository;
 
     public void sendNotifications(PublishTechArticleRequest publishTechArticleRequest) {
-
-        RestTemplate restTemplate = new RestTemplate();
 
         ApiKey findApiKey = apiKeyRepository.findByServiceName(serviceName).orElseThrow(() ->
                 new RuntimeException("서비스 이름을 확인해주세요."));

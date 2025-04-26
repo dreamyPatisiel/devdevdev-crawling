@@ -24,5 +24,4 @@ public class TechArticleService {
     public List<TechArticle> saveAll(List<TechArticle> techArticles) {
         return techArticleRepository.saveAll(techArticles);
     }
-
 }

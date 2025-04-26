@@ -1,6 +1,12 @@
+service-name: devdevdev-crawling
+
 spring:
   profiles:
     active: ${spring.profiles.active}
     include:
       - "db-${spring.profiles.active}"
       - "opensearch-${spring.profiles.active}"
+      - "domain-${spring.profiles.active}"
+
+server:
+  port: 8081

@@ -1,4 +1,9 @@
+service-name: devdevdev-crawling
+
 spring:
   profiles:
+    active: test
     include:
-      - test
+      - "db-test"
+      - "opensearch-test"
+      - "domain-test"
